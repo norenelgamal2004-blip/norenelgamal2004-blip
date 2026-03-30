@@ -4,9 +4,9 @@
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=norenelgamal2004-blip&label=Profile views&color=0e75b6&style=flat" alt="norenelgamal2004-blip" /> </p>
 
-- 🔭 I'm currently working on **ITI power bi track Training **
+- 🔭 I'm currently working at **ITI power bi intensive 5 month Training**
 
-- 🌱 I'm currently learning **SQL Python R mongodb airflow excel power bi spss stata **
+- 🌱 I'm currently learning **SQL Python R SSIS SSRS SSAS mongodb airflow excel power bi spss stata**
 
 - 👯 I'm looking to collaborate on **Marketing basket analysis. Statistical reports and interactive dashboard. categorical analysis. Time series analysis an decision trees and forest and k- means area **
 
