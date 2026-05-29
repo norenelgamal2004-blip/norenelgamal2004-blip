@@ -154,6 +154,11 @@
             display: block;
             margin-bottom: 5px;
         }
+
+        /* Mermaid CSS for hierarchical node sizing */
+        .mermaid svg .label {
+            font-size: 14px !important;
+        }
     </style>
 </head>
 <body>
@@ -165,12 +170,12 @@
 
         <div class="info-box">
             <strong>📚 About this Mind Map:</strong>
-            This interactive visualization breaks down all the key topics and hands-on labs covered in the Microsoft Fabric Engineer Associate (DP-700) certification course. Use it to understand the learning path and prepare for the exam.
+            This interactive visualization breaks down all the key topics and hands-on labs covered in the Microsoft Fabric Engineer Associate (DP-700) certification course. Node sizes decrease hierarchically as you go deeper into sub-levels.
         </div>
 
         <div class="mermaid">
 mindmap
-  root((DP-700<br/>Microsoft Fabric))
+  root((🎯 DP-700<br/>Microsoft Fabric))
     1️⃣ Data Ingestion & Processing
       Lakehouse
         Create Lakehouse
@@ -284,7 +289,135 @@ mindmap
     </div>
 
     <script>
-        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        mermaid.initialize({ 
+            startOnLoad: true, 
+            theme: 'default',
+            mindmap: {
+                padding: 20,
+                maxNodeWidth: 200
+            }
+        });
+
+        // Custom styling for hierarchical node sizes
+        setTimeout(() => {
+            const svgElement = document.querySelector('.mermaid svg');
+            if (svgElement) {
+                applyHierarchicalSizes(svgElement);
+            }
+        }, 500);
+
+        function applyHierarchicalSizes(svg) {
+            const nodes = svg.querySelectorAll('g[id*="node"]');
+            
+            nodes.forEach((node, index) => {
+                const text = node.querySelector('text');
+                const rect = node.querySelector('rect');
+                const circle = node.querySelector('circle');
+                const path = node.querySelector('path');
+                
+                if (!text) return;
+
+                // Determine depth level by checking the parent structure
+                let depth = getNodeDepth(node);
+                
+                let fontSize, width, height, scale;
+                
+                // Root node - largest
+                if (depth === 0) {
+                    fontSize = 20;
+                    scale = 1.4;
+                } 
+                // Level 1 branches
+                else if (depth === 1) {
+                    fontSize = 16;
+                    scale = 1.2;
+                }
+                // Level 2
+                else if (depth === 2) {
+                    fontSize = 13;
+                    scale = 1.0;
+                }
+                // Level 3
+                else if (depth === 3) {
+                    fontSize = 11;
+                    scale = 0.85;
+                }
+                // Level 4 and beyond - smallest
+                else {
+                    fontSize = 9;
+                    scale = 0.7;
+                }
+
+                // Apply font size
+                text.style.fontSize = fontSize + 'px';
+                text.style.fontWeight = depth <= 1 ? 'bold' : depth <= 2 ? '600' : '500';
+
+                // Scale the shapes
+                if (rect) {
+                    const origWidth = parseFloat(rect.getAttribute('width')) || 100;
+                    const origHeight = parseFloat(rect.getAttribute('height')) || 50;
+                    rect.setAttribute('width', origWidth * scale);
+                    rect.setAttribute('height', origHeight * scale);
+                }
+
+                if (circle) {
+                    const origRadius = parseFloat(circle.getAttribute('r')) || 40;
+                    circle.setAttribute('r', origRadius * scale);
+                }
+
+                if (path) {
+                    const transform = path.getAttribute('transform');
+                    if (transform && !transform.includes('scale')) {
+                        path.setAttribute('transform', transform + ` scale(${scale})`);
+                    }
+                }
+
+                // Adjust spacing based on depth
+                const tspan = text.querySelector('tspan');
+                if (tspan) {
+                    tspan.setAttribute('dy', Math.max(fontSize * 0.3, 4));
+                }
+            });
+        }
+
+        function getNodeDepth(node) {
+            let depth = 0;
+            let current = node.parentElement;
+            
+            // Count parent g elements to determine depth
+            while (current && current.tagName === 'g') {
+                if (current.getAttribute('id') && current.getAttribute('id').includes('node')) {
+                    depth++;
+                }
+                current = current.parentElement;
+            }
+            
+            // Alternative: check the node's position in the tree structure
+            const text = node.querySelector('text');
+            if (text) {
+                const content = text.textContent.toLowerCase();
+                
+                if (content.includes('dp-700')) return 0;
+                if (content.match(/^[1-4]️⃣/)) return 1;
+                if (content.match(/^(lakehouse|apache spark|dataflow|pipelines|medallion|real-time|design|data loading|analysis|monitoring|security|deployment|promotion|activity|data security)/i)) return 2;
+                if (content.match(/^(bronze|silver|gold|eventstreams|eventhouse|workspace|schema|bulk|t-sql|performance|row-level|ci\/cd)/i)) return 3;
+                
+                return 4;
+            }
+            
+            return depth;
+        }
+
+        // Re-apply sizes on window resize
+        window.addEventListener('resize', () => {
+            setTimeout(() => {
+                const svgElement = document.querySelector('.mermaid svg');
+                if (svgElement) {
+                    applyHierarchicalSizes(svgElement);
+                }
+            }, 100);
+        });
+
         mermaid.contentLoaded();
 
         function downloadMindMap() {
@@ -300,7 +433,7 @@ mindmap
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'DP700-Mindmap.svg';
+            link.download = 'DP700-Mindmap-Hierarchical.svg';
             link.click();
             URL.revokeObjectURL(url);
         }
@@ -311,7 +444,7 @@ mindmap
 
         function copyToClipboard() {
             const mermaidCode = `mindmap
-  root((DP-700<br/>Microsoft Fabric))
+  root((🎯 DP-700<br/>Microsoft Fabric))
     1️⃣ Data Ingestion & Processing
       Lakehouse
         Create Lakehouse
