@@ -165,7 +165,7 @@
 
         <div class="info-box">
             <strong>📚 About this Mind Map:</strong>
-            This interactive visualization breaks down the key topics and hands-on labs covered in the Microsoft Fabric Engineer Associate (DP-700) certification course.
+            This interactive visualization breaks down all the key topics and hands-on labs covered in the Microsoft Fabric Engineer Associate (DP-700) certification course. Use it to understand the learning path and prepare for the exam.
         </div>
 
         <div class="mermaid">
@@ -173,53 +173,85 @@ mindmap
   root((DP-700<br/>Microsoft Fabric))
     1️⃣ Data Ingestion & Processing
       Lakehouse
-        Create & Ingest Data
+        Create Lakehouse
+        Data Ingestion
         Data Organization
         Query Execution
       Apache Spark
         Distributed Processing
+        PySpark & SQL
         Delta Tables
         Data Transformation
       Dataflow Gen2
         Data Integration
         ETL Pipelines
-        Transformations
-      Data Pipelines
-        Automated Workflows
+        Data Transformation
         Scheduling
+      Data Pipelines
+        Pipeline Creation
+        Automated Workflows
+        Trigger Configuration
         Error Handling
     2️⃣ Data Organization & Architecture
       Medallion Architecture
         Bronze Layer
+          Raw Data
+          Source Integration
         Silver Layer
+          Cleaned Data
+          Transformations
         Gold Layer
+          Business Data
+          Analytics Ready
       Real-Time Processing
         Eventstreams
+          Event Ingestion
+          Stream Processing
         Eventhouse
-        Time-Series Analytics
+          Event Storage
+          Time-Series Analytics
     3️⃣ Data Warehouse
       Design & Creation
+        Workspace Setup
         Schema Design
         Table Configuration
-      Data Loading & Analysis
+      Data Loading
         Bulk Insert
+        Incremental Load
+        Data Validation
+      Analysis & Querying
         T-SQL Queries
         Aggregations
-      Monitoring & Security
-        Performance Monitoring
+        Performance Tuning
+      Monitoring
+        Performance Metrics
+        Query Monitoring
         Monitor Hub
-        Access Control
+        Activity Tracking
+      Security & Access Control
+        Row-Level Security
+        Column-Level Security
+        Role Management
         Data Protection
     4️⃣ Advanced Operations
       Deployment Pipelines
-        CI/CD Implementation
         Environment Management
+        CI/CD Implementation
+        Deployment Automation
         Version Control
-      Activity Monitoring & Governance
+      Promotion Pipelines
+        Development to Production
+        Validation Steps
+        Rollback Procedures
+      Activity Monitoring
         Monitor Hub
         Audit Logs
+        Performance Analysis
+      Data Security & Governance
         Access Management
-        Compliance Controls
+        Data Classification
+        Compliance
+        Privacy Controls
         </div>
 
         <div class="legend">
@@ -227,19 +259,19 @@ mindmap
             <div class="legend-items">
                 <div class="legend-item">
                     <strong>1️⃣ Data Ingestion & Processing</strong>
-                    <p>Learn to ingest data using Lakehouses, process with Apache Spark, transform with Dataflow Gen2, and automate with Pipelines. Master the core data processing workflows.</p>
+                    <p>Learn to ingest data using Lakehouses, process with Apache Spark, transform with Dataflow Gen2, and automate with Pipelines. Master the core data processing workflows including pipeline creation, automated workflows, trigger configuration, and error handling.</p>
                 </div>
                 <div class="legend-item">
                     <strong>2️⃣ Data Organization & Architecture</strong>
-                    <p>Implement industry best practices with Medallion Architecture (Bronze, Silver, Gold layers) and handle real-time data streams with Eventstreams & Eventhouse.</p>
+                    <p>Implement industry best practices with Medallion Architecture (Bronze Layer for raw data, Silver Layer for cleaned data, Gold Layer for analytics-ready data) and handle real-time data streams with Eventstreams for event ingestion and Eventhouse for event storage and time-series analytics.</p>
                 </div>
                 <div class="legend-item">
                     <strong>3️⃣ Data Warehouse</strong>
-                    <p>Master data warehouse operations: design, schema configuration, data loading, analysis with T-SQL, performance monitoring, and comprehensive security controls.</p>
+                    <p>Master data warehouse operations: design & creation with workspace setup and schema design, data loading with bulk insert and incremental load, analysis & querying with T-SQL queries and aggregations, monitoring with performance metrics and query monitoring, and comprehensive security & access control with row-level and column-level security.</p>
                 </div>
                 <div class="legend-item">
                     <strong>4️⃣ Advanced Operations</strong>
-                    <p>Deploy solutions professionally with CI/CD deployment pipelines, monitor activities through the Monitor Hub, and implement enterprise-grade governance and compliance.</p>
+                    <p>Deploy solutions professionally with deployment pipelines (CI/CD implementation, environment management, deployment automation), promotion pipelines for development to production workflows, activity monitoring through Monitor Hub with audit logs, and data security & governance with access management, data classification, compliance, and privacy controls.</p>
                 </div>
             </div>
         </div>
@@ -282,53 +314,85 @@ mindmap
   root((DP-700<br/>Microsoft Fabric))
     1️⃣ Data Ingestion & Processing
       Lakehouse
-        Create & Ingest Data
+        Create Lakehouse
+        Data Ingestion
         Data Organization
         Query Execution
       Apache Spark
         Distributed Processing
+        PySpark & SQL
         Delta Tables
         Data Transformation
       Dataflow Gen2
         Data Integration
         ETL Pipelines
-        Transformations
-      Data Pipelines
-        Automated Workflows
+        Data Transformation
         Scheduling
+      Data Pipelines
+        Pipeline Creation
+        Automated Workflows
+        Trigger Configuration
         Error Handling
     2️⃣ Data Organization & Architecture
       Medallion Architecture
         Bronze Layer
+          Raw Data
+          Source Integration
         Silver Layer
+          Cleaned Data
+          Transformations
         Gold Layer
+          Business Data
+          Analytics Ready
       Real-Time Processing
         Eventstreams
+          Event Ingestion
+          Stream Processing
         Eventhouse
-        Time-Series Analytics
+          Event Storage
+          Time-Series Analytics
     3️⃣ Data Warehouse
       Design & Creation
+        Workspace Setup
         Schema Design
         Table Configuration
-      Data Loading & Analysis
+      Data Loading
         Bulk Insert
+        Incremental Load
+        Data Validation
+      Analysis & Querying
         T-SQL Queries
         Aggregations
-      Monitoring & Security
-        Performance Monitoring
+        Performance Tuning
+      Monitoring
+        Performance Metrics
+        Query Monitoring
         Monitor Hub
-        Access Control
+        Activity Tracking
+      Security & Access Control
+        Row-Level Security
+        Column-Level Security
+        Role Management
         Data Protection
     4️⃣ Advanced Operations
       Deployment Pipelines
-        CI/CD Implementation
         Environment Management
+        CI/CD Implementation
+        Deployment Automation
         Version Control
-      Activity Monitoring & Governance
+      Promotion Pipelines
+        Development to Production
+        Validation Steps
+        Rollback Procedures
+      Activity Monitoring
         Monitor Hub
         Audit Logs
+        Performance Analysis
+      Data Security & Governance
         Access Management
-        Compliance Controls`;
+        Data Classification
+        Compliance
+        Privacy Controls`;
 
             navigator.clipboard.writeText(mermaidCode).then(() => {
                 alert('Mermaid code copied to clipboard! You can paste it in any Mermaid editor.');
