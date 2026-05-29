@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Knowledge - Interactive Mind Map</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .controls button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .controls button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .canvas-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        #mindmap-canvas {
+            width: 100%;
+            height: 800px;
+            border: none;
+        }
+
+        .legend {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .legend h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .legend-item {
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid;
+        }
+
+        .legend-item h4 {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .legend-item p {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .level-1 { border-left-color: #667eea; background: #f0f4ff; }
+        .level-1 h4 { color: #667eea; }
+
+        .level-2 { border-left-color: #764ba2; background: #faf0ff; }
+        .level-2 h4 { color: #764ba2; }
+
+        .level-3 { border-left-color: #f093fb; background: #fef5ff; }
+        .level-3 h4 { color: #f093fb; }
+
+        .level-4 { border-left-color: #4facfe; background: #f0f8ff; }
+        .level-4 h4 { color: #4facfe; }
+
+        .info-box {
+            background: #e7f3ff;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #004085;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            #mindmap-canvas {
+                height: 600px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .controls button {
+                width: 100%;
+            }
+        }
+
+        .tooltip {
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            pointer-events: none;
+            max-width: 300px;
+        }
+
+        .hierarchy-levels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .hierarchy-card {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .hierarchy-card.l0 { background: #667eea; }
+        .hierarchy-card.l1 { background: #764ba2; }
+        .hierarchy-card.l2 { background: #f093fb; }
+        .hierarchy-card.l3 { background: #4facfe; }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="header">
+            <h1>📊 Data Knowledge - Interactive Mind Map</h1>
+            <p>Complete hierarchical structure of data-related concepts and technologies</p>
+        </div>
+
+        <div class="info-box">
+            <strong>💡 How to Use:</strong>
+            Click on nodes to see details. Use the controls to navigate and interact with the mind map. The colors represent different hierarchical levels for better visual organization.
+        </div>
+
+        <div class="controls">
+            <button onclick="resetZoom()">🔄 Reset View</button>
+            <button onclick="zoomIn()">🔍+ Zoom In</button>
+            <button onclick="zoomOut()">🔍- Zoom Out</button>
+            <button onclick="fitToScreen()">📐 Fit to Screen</button>
+            <button onclick="downloadImage()">📥 Download</button>
+        </div>
+
+        <div class="hierarchy-levels">
+            <div class="hierarchy-card l0">Level 0: Root (Data Knowledge)</div>
+            <div class="hierarchy-card l1">Level 1: Main Categories</div>
+            <div class="hierarchy-card l2">Level 2: Subcategories</div>
+            <div class="hierarchy-card l3">Level 3: Specific Topics</div>
+        </div>
+
+        <div class="canvas-container">
+            <div id="mindmap-canvas"></div>
+        </div>
+
+        <div class="legend">
+            <h3>📚 Complete Data Knowledge Structure</h3>
+            
+            <h4 style="color: #667eea; margin-top: 20px;">🎯 Level 1: Main Categories</h4>
+            <div class="legend-grid">
+                <div class="legend-item level-1">
+                    <h4>1. Data Fundamentals</h4>
+                    <p>Core concepts: data types, structures, quality, governance, and privacy principles.</p>
+                </div>
+                <div class="legend-item level-1">
+                    <h4>2. Data Storage</h4>
+                    <p>Database systems, data warehouses, data lakes, and cloud storage solutions.</p>
+                </div>
+                <div class="legend-item level-1">
+                    <h4>3. Data Processing</h4>
+                    <p>ETL/ELT, data pipelines, batch and real-time processing frameworks.</p>
+                </div>
+                <div class="legend-item level-1">
+                    <h4>4. Data Analysis</h4>
+                    <p>Statistical analysis, exploratory data analysis, and business intelligence.</p>
+                </div>
+                <div class="legend-item level-1">
+                    <h4>5. Machine Learning</h4>
+                    <p>ML algorithms, deep learning, model training, and evaluation techniques.</p>
+                </div>
+                <div class="legend-item level-1">
+                    <h4>6. Data Tools & Tech</h4>
+                    <p>Programming languages, tools, frameworks, and platforms for data work.</p>
+                </div>
+            </div>
+
+            <h4 style="color: #764ba2; margin-top: 30px;">📋 Level 2 & 3: Detailed Topics (sample)</h4>
+            <div class="legend-grid">
+                <div class="legend-item level-2">
+                    <h4>Data Types & Structures</h4>
+                    <p>Numeric, String, Boolean, Arrays, Tables, Graphs, Time-series</p>
+                </div>
+                <div class="legend-item level-2">
+                    <h4>Relational Databases</h4>
+                    <p>SQL, Schema Design, Normalization, Indexing, Transactions</p>
+                </div>
+                <div class="legend-item level-2">
+                    <h4>ETL Processes</h4>
+                    <p>Extract, Transform, Load, Data Validation, Error Handling</p>
+                </div>
+                <div class="legend-item level-2">
+                    <h4>Statistical Methods</h4>
+                    <p>Descriptive Stats, Hypothesis Testing, Regression, Correlation</p>
+                </div>
+                <div class="legend-item level-2">
+                    <h4>Supervised Learning</h4>
+                    <p>Regression, Classification, Feature Engineering, Model Evaluation</p>
+                </div>
+                <div class="legend-item level-2">
+                    <h4>Programming Languages</h4>
+                    <p>Python, SQL, R, Scala, Java, Spark, Pandas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create a network visualization
+        const nodes = new vis.DataSet([
+            // Level 0: Root
+            { id: 0, label: '📊 DATA KNOWLEDGE', level: 0, title: 'Root - All Data Related Topics', color: '#667eea', font: { size: 20, bold: true } },
+
+            // Level 1: Main Categories
+            { id: 1, label: 'Data\nFundamentals', level: 1, title: 'Core Concepts', color: '#764ba2' },
+            { id: 2, label: 'Data\nStorage', level: 1, title: 'Storage Systems', color: '#764ba2' },
+            { id: 3, label: 'Data\nProcessing', level: 1, title: 'Processing & ETL', color: '#764ba2' },
+            { id: 4, label: 'Data\nAnalysis', level: 1, title: 'Analysis & BI', color: '#764ba2' },
+            { id: 5, label: 'Machine\nLearning', level: 1, title: 'ML & AI', color: '#764ba2' },
+            { id: 6, label: 'Data Tools\n& Tech', level: 1, title: 'Tools & Platforms', color: '#764ba2' },
+
+            // Level 2: Data Fundamentals
+            { id: 11, label: 'Data Types', level: 2, title: 'Numeric, String, Boolean, Date', color: '#f093fb' },
+            { id: 12, label: 'Data Structures', level: 2, title: 'Arrays, Tables, Graphs', color: '#f093fb' },
+            { id: 13, label: 'Data Quality', level: 2, title: 'Accuracy, Completeness, Consistency', color: '#f093fb' },
+            { id: 14, label: 'Data Governance', level: 2, title: 'Policies, Standards, Compliance', color: '#f093fb' },
+            { id: 15, label: 'Data Privacy', level: 2, title: 'GDPR, Security, Encryption', color: '#f093fb' },
+
+            // Level 2: Data Storage
+            { id: 21, label: 'Relational DB', level: 2, title: 'SQL-based', color: '#f093fb' },
+            { id: 22, label: 'NoSQL DB', level: 2, title: 'Non-relational', color: '#f093fb' },
+            { id: 23, label: 'Data Warehouse', level: 2, title: 'OLAP Systems', color: '#f093fb' },
+            { id: 24, label: 'Data Lake', level: 2, title: 'Raw Data Storage', color: '#f093fb' },
+            { id: 25, label: 'Cloud Storage', level: 2, title: 'AWS, Azure, GCP', color: '#f093fb' },
+
+            // Level 2: Data Processing
+            { id: 31, label: 'ETL/ELT', level: 2, title: 'Data Pipeline', color: '#f093fb' },
+            { id: 32, label: 'Batch Processing', level: 2, title: 'Scheduled Jobs', color: '#f093fb' },
+            { id: 33, label: 'Stream Processing', level: 2, title: 'Real-time Data', color: '#f093fb' },
+            { id: 34, label: 'Data Validation', level: 2, title: 'Quality Checks', color: '#f093fb' },
+            { id: 35, label: 'Data Integration', level: 2, title: 'Combining Sources', color: '#f093fb' },
+
+            // Level 2: Data Analysis
+            { id: 41, label: 'Exploratory Analysis', level: 2, title: 'EDA, Visualization', color: '#f093fb' },
+            { id: 42, label: 'Statistical Analysis', level: 2, title: 'Descriptive, Inferential', color: '#f093fb' },
+            { id: 43, label: 'Business Intelligence', level: 2, title: 'Dashboards, Reports', color: '#f093fb' },
+            { id: 44, label: 'Data Visualization', level: 2, title: 'Charts, Graphs, Maps', color: '#f093fb' },
+            { id: 45, label: 'Predictive Analytics', level: 2, title: 'Forecasting, Trends', color: '#f093fb' },
+
+            // Level 2: Machine Learning
+            { id: 51, label: 'Supervised Learning', level: 2, title: 'Classification, Regression', color: '#f093fb' },
+            { id: 52, label: 'Unsupervised Learning', level: 2, title: 'Clustering, Dimensionality', color: '#f093fb' },
+            { id: 53, label: 'Deep Learning', level: 2, title: 'Neural Networks, NLP', color: '#f093fb' },
+            { id: 54, label: 'Model Evaluation', level: 2, title: 'Metrics, Validation', color: '#f093fb' },
+            { id: 55, label: 'Feature Engineering', level: 2, title: 'Selection, Extraction', color: '#f093fb' },
+
+            // Level 2: Tools & Tech
+            { id: 61, label: 'Programming', level: 2, title: 'Python, R, SQL, Java', color: '#f093fb' },
+            { id: 62, label: 'Frameworks', level: 2, title: 'Spark, Hadoop, TensorFlow', color: '#f093fb' },
+            { id: 63, label: 'Visualization Tools', level: 2, title: 'Tableau, Power BI, Matplotlib', color: '#f093fb' },
+            { id: 64, label: 'Databases', level: 2, title: 'PostgreSQL, MongoDB, Cassandra', color: '#f093fb' },
+            { id: 65, label: 'Cloud Platforms', level: 2, title: 'AWS, Azure, GCP', color: '#f093fb' },
+
+            // Level 3: Data Types Details
+            { id: 111, label: 'Numeric', level: 3, title: 'Integer, Float, Decimal', color: '#4facfe' },
+            { id: 112, label: 'Text/String', level: 3, title: 'Characters, Strings', color: '#4facfe' },
+            { id: 113, label: 'Boolean', level: 3, title: 'True/False', color: '#4facfe' },
+            { id: 114, label: 'Date/Time', level: 3, title: 'Timestamps', color: '#4facfe' },
+
+            // Level 3: Data Structures Details
+            { id: 121, label: 'Arrays', level: 3, title: '1D, 2D, Multi-dimensional', color: '#4facfe' },
+            { id: 122, label: 'Tables/DataFrames', level: 3, title: 'Rows & Columns', color: '#4facfe' },
+            { id: 123, label: 'Graphs/Networks', level: 3, title: 'Nodes & Edges', color: '#4facfe' },
+            { id: 124, label: 'Trees', level: 3, title: 'Hierarchical', color: '#4facfe' },
+
+            // Level 3: Relational DB Details
+            { id: 211, label: 'Schema Design', level: 3, title: 'Tables, Relationships', color: '#4facfe' },
+            { id: 212, label: 'Normalization', level: 3, title: 'BCNF, 3NF, 2NF, 1NF', color: '#4facfe' },
+            { id: 213, label: 'Indexing', level: 3, title: 'B-tree, Hash indexes', color: '#4facfe' },
+            { id: 214, label: 'SQL Queries', level: 3, title: 'SELECT, JOIN, GROUP BY', color: '#4facfe' },
+
+            // Level 3: ETL Details
+            { id: 311, label: 'Extract', level: 3, title: 'Source data collection', color: '#4facfe' },
+            { id: 312, label: 'Transform', level: 3, title: 'Data cleaning & mapping', color: '#4facfe' },
+            { id: 313, label: 'Load', level: 3, title: 'Data to destination', color: '#4facfe' },
+            { id: 314, label: 'Scheduling', level: 3, title: 'Automation & triggers', color: '#4facfe' },
+
+            // Level 3: ML Details
+            { id: 511, label: 'Regression', level: 3, title: 'Linear, Polynomial', color: '#4facfe' },
+            { id: 512, label: 'Classification', level: 3, title: 'Decision Trees, SVM', color: '#4facfe' },
+            { id: 513, label: 'Clustering', level: 3, title: 'K-means, Hierarchical', color: '#4facfe' },
+            { id: 514, label: 'Neural Networks', level: 3, title: 'CNN, RNN, Transformers', color: '#4facfe' },
+        ]);
+
+        const edges = new vis.DataSet([
+            // Root to Level 1
+            { from: 0, to: 1, arrows: 'to', smooth: { type: 'continuous' } },
+            { from: 0, to: 2, arrows: 'to', smooth: { type: 'continuous' } },
+            { from: 0, to: 3, arrows: 'to', smooth: { type: 'continuous' } },
+            { from: 0, to: 4, arrows: 'to', smooth: { type: 'continuous' } },
+            { from: 0, to: 5, arrows: 'to', smooth: { type: 'continuous' } },
+            { from: 0, to: 6, arrows: 'to', smooth: { type: 'continuous' } },
+
+            // Level 1 to Level 2: Data Fundamentals
+            { from: 1, to: 11, arrows: 'to' }, { from: 1, to: 12, arrows: 'to' },
+            { from: 1, to: 13, arrows: 'to' }, { from: 1, to: 14, arrows: 'to' },
+            { from: 1, to: 15, arrows: 'to' },
+
+            // Level 1 to Level 2: Data Storage
+            { from: 2, to: 21, arrows: 'to' }, { from: 2, to: 22, arrows: 'to' },
+            { from: 2, to: 23, arrows: 'to' }, { from: 2, to: 24, arrows: 'to' },
+            { from: 2, to: 25, arrows: 'to' },
+
+            // Level 1 to Level 2: Data Processing
+            { from: 3, to: 31, arrows: 'to' }, { from: 3, to: 32, arrows: 'to' },
+            { from: 3, to: 33, arrows: 'to' }, { from: 3, to: 34, arrows: 'to' },
+            { from: 3, to: 35, arrows: 'to' },
+
+            // Level 1 to Level 2: Data Analysis
+            { from: 4, to: 41, arrows: 'to' }, { from: 4, to: 42, arrows: 'to' },
+            { from: 4, to: 43, arrows: 'to' }, { from: 4, to: 44, arrows: 'to' },
+            { from: 4, to: 45, arrows: 'to' },
+
+            // Level 1 to Level 2: Machine Learning
+            { from: 5, to: 51, arrows: 'to' }, { from: 5, to: 52, arrows: 'to' },
+            { from: 5, to: 53, arrows: 'to' }, { from: 5, to: 54, arrows: 'to' },
+            { from: 5, to: 55, arrows: 'to' },
+
+            // Level 1 to Level 2: Tools & Tech
+            { from: 6, to: 61, arrows: 'to' }, { from: 6, to: 62, arrows: 'to' },
+            { from: 6, to: 63, arrows: 'to' }, { from: 6, to: 64, arrows: 'to' },
+            { from: 6, to: 65, arrows: 'to' },
+
+            // Level 2 to Level 3: Data Types
+            { from: 11, to: 111, arrows: 'to' }, { from: 11, to: 112, arrows: 'to' },
+            { from: 11, to: 113, arrows: 'to' }, { from: 11, to: 114, arrows: 'to' },
+
+            // Level 2 to Level 3: Data Structures
+            { from: 12, to: 121, arrows: 'to' }, { from: 12, to: 122, arrows: 'to' },
+            { from: 12, to: 123, arrows: 'to' }, { from: 12, to: 124, arrows: 'to' },
+
+            // Level 2 to Level 3: Relational DB
+            { from: 21, to: 211, arrows: 'to' }, { from: 21, to: 212, arrows: 'to' },
+            { from: 21, to: 213, arrows: 'to' }, { from: 21, to: 214, arrows: 'to' },
+
+            // Level 2 to Level 3: ETL
+            { from: 31, to: 311, arrows: 'to' }, { from: 31, to: 312, arrows: 'to' },
+            { from: 31, to: 313, arrows: 'to' }, { from: 31, to: 314, arrows: 'to' },
+
+            // Level 2 to Level 3: ML
+            { from: 51, to: 511, arrows: 'to' }, { from: 51, to: 512, arrows: 'to' },
+            { from: 52, to: 513, arrows: 'to' }, { from: 53, to: 514, arrows: 'to' },
+        ]);
+
+        const options = {
+            layout: {
+                hierarchical: {
+                    enabled: true,
+                    levelSeparation: 200,
+                    nodeSpacing: 150,
+                    treeSpacing: 100,
+                    direction: 'UD',
+                    sortMethod: 'directed'
+                }
+            },
+            physics: {
+                enabled: false
+            },
+            nodes: {
+                shape: 'box',
+                margin: 10,
+                widthConstraint: {
+                    maximum: 150
+                },
+                font: {
+                    size: 14,
+                    face: 'Segoe UI',
+                    color: '#fff'
+                },
+                borderWidth: 2,
+                borderWidthSelected: 4,
+                shadow: {
+                    enabled: true,
+                    color: 'rgba(0,0,0,0.3)',
+                    size: 10,
+                    x: 5,
+                    y: 5
+                }
+            },
+            edges: {
+                width: 2,
+                color: { color: '#ddd', highlight: '#667eea' },
+                arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+                smooth: { type: 'cubicBezier' },
+                shadow: {
+                    enabled: true,
+                    color: 'rgba(0,0,0,0.2)',
+                    size: 5,
+                    x: 3,
+                    y: 3
+                }
+            },
+            interaction: {
+                hover: true,
+                navigationButtons: true,
+                keyboard: true,
+                zoomView: true,
+                dragView: true
+            }
+        };
+
+        const network = new vis.Network(
+            document.getElementById('mindmap-canvas'),
+            { nodes: nodes, edges: edges },
+            options
+        );
+
+        // Control functions
+        function resetZoom() {
+            network.fit({ animation: { duration: 1000, easingFunction: 'easeInOutQuad' } });
+        }
+
+        function zoomIn() {
+            network.getScale();
+            network.zoomIn();
+        }
+
+        function zoomOut() {
+            network.zoomOut();
+        }
+
+        function fitToScreen() {
+            network.fit();
+        }
+
+        function downloadImage() {
+            const canvas = document.querySelector('canvas');
+            const image = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = image;
+            link.download = 'data-knowledge-mindmap.png';
+            link.click();
+        }
+
+        // Initialize with fit view
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                network.fit();
+            }, 500);
+        });
+
+        // Add hover effects
+        network.on('hoverNode', function(params) {
+            document.body.style.cursor = 'pointer';
+        });
+
+        network.on('blurNode', function(params) {
+            document.body.style.cursor = 'default';
+        });
+    </script>
+</body>
+</html>
