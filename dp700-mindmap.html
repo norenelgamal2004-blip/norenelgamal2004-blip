@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DP-700 Microsoft Fabric Engineer - Interactive Mind Map</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            overflow-x: auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .mermaid {
+            display: flex;
+            justify-content: center;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        .legend {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+
+        .legend h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .legend-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .legend-item {
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 3px solid #764ba2;
+        }
+
+        .legend-item strong {
+            color: #764ba2;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .legend-item p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .legend-items {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #004085;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 DP-700 Microsoft Fabric Engineer Associate</h1>
+            <p>Interactive Mind Map - Hands-On Labs & Certification Path</p>
+        </div>
+
+        <div class="info-box">
+            <strong>📚 About this Mind Map:</strong>
+            This interactive visualization breaks down the key topics and hands-on labs covered in the Microsoft Fabric Engineer Associate (DP-700) certification course.
+        </div>
+
+        <div class="mermaid">
+mindmap
+  root((DP-700<br/>Microsoft Fabric))
+    2️⃣ Data Ingestion & Processing
+      Lakehouse
+        Create & Ingest Data
+        Data Organization
+        Query Execution
+      Apache Spark
+        Distributed Processing
+        Delta Tables
+        Data Transformation
+      Dataflow Gen2
+        Data Integration
+        ETL Pipelines
+        Transformations
+      Data Pipelines
+        Automated Workflows
+        Scheduling
+        Error Handling
+    3️⃣ Data Organization & Architecture
+      Medallion Architecture
+        Bronze Layer
+        Silver Layer
+        Gold Layer
+      Real-Time Processing
+        Eventstreams
+        Eventhouse
+        Time-Series Analytics
+    4️⃣ Data Warehouse
+      Design & Creation
+        Schema Design
+        Table Configuration
+      Data Loading & Analysis
+        Bulk Insert
+        T-SQL Queries
+        Aggregations
+      Monitoring & Security
+        Performance Monitoring
+        Monitor Hub
+        Access Control
+        Data Protection
+    5️⃣ Advanced Operations
+      Deployment Pipelines
+        CI/CD Implementation
+        Environment Management
+        Version Control
+      Activity Monitoring & Governance
+        Monitor Hub
+        Audit Logs
+        Access Management
+        Compliance Controls
+        </div>
+
+        <div class="legend">
+            <h3>📖 Learning Modules Overview</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <strong>2️⃣ Data Ingestion & Processing</strong>
+                    <p>Learn to ingest data using Lakehouses, process with Apache Spark, transform with Dataflow Gen2, and automate with Pipelines. Master the core data processing workflows.</p>
+                </div>
+                <div class="legend-item">
+                    <strong>3️⃣ Data Organization & Architecture</strong>
+                    <p>Implement industry best practices with Medallion Architecture (Bronze, Silver, Gold layers) and handle real-time data streams with Eventstreams & Eventhouse.</p>
+                </div>
+                <div class="legend-item">
+                    <strong>4️⃣ Data Warehouse</strong>
+                    <p>Master data warehouse operations: design, schema configuration, data loading, analysis with T-SQL, performance monitoring, and comprehensive security controls.</p>
+                </div>
+                <div class="legend-item">
+                    <strong>5️⃣ Advanced Operations</strong>
+                    <p>Deploy solutions professionally with CI/CD deployment pipelines, monitor activities through the Monitor Hub, and implement enterprise-grade governance and compliance.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="downloadMindMap()">📥 Download as SVG</button>
+            <button class="btn btn-secondary" onclick="printPage()">🖨️ Print</button>
+            <button class="btn btn-secondary" onclick="copyToClipboard()">📋 Copy Diagram Code</button>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default' });
+        mermaid.contentLoaded();
+
+        function downloadMindMap() {
+            const svg = document.querySelector('.mermaid svg');
+            if (!svg) {
+                alert('Mind map is still loading. Please try again in a moment.');
+                return;
+            }
+            
+            const serializer = new XMLSerializer();
+            const svgString = serializer.serializeToString(svg);
+            const blob = new Blob([svgString], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'DP700-Mindmap.svg';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function printPage() {
+            window.print();
+        }
+
+        function copyToClipboard() {
+            const mermaidCode = `mindmap
+  root((DP-700<br/>Microsoft Fabric))
+    2️⃣ Data Ingestion & Processing
+      Lakehouse
+        Create & Ingest Data
+        Data Organization
+        Query Execution
+      Apache Spark
+        Distributed Processing
+        Delta Tables
+        Data Transformation
+      Dataflow Gen2
+        Data Integration
+        ETL Pipelines
+        Transformations
+      Data Pipelines
+        Automated Workflows
+        Scheduling
+        Error Handling
+    3️⃣ Data Organization & Architecture
+      Medallion Architecture
+        Bronze Layer
+        Silver Layer
+        Gold Layer
+      Real-Time Processing
+        Eventstreams
+        Eventhouse
+        Time-Series Analytics
+    4️⃣ Data Warehouse
+      Design & Creation
+        Schema Design
+        Table Configuration
+      Data Loading & Analysis
+        Bulk Insert
+        T-SQL Queries
+        Aggregations
+      Monitoring & Security
+        Performance Monitoring
+        Monitor Hub
+        Access Control
+        Data Protection
+    5️⃣ Advanced Operations
+      Deployment Pipelines
+        CI/CD Implementation
+        Environment Management
+        Version Control
+      Activity Monitoring & Governance
+        Monitor Hub
+        Audit Logs
+        Access Management
+        Compliance Controls`;
+
+            navigator.clipboard.writeText(mermaidCode).then(() => {
+                alert('Mermaid code copied to clipboard! You can paste it in any Mermaid editor.');
+            }).catch(() => {
+                alert('Failed to copy. Please try again.');
+            });
+        }
+    </script>
+</body>
+</html>
